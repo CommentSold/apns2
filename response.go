@@ -129,6 +129,9 @@ type Response struct {
 	// If the value of StatusCode is 410, this is the last time at which APNs
 	// confirmed that the device token was no longer valid for the topic.
 	Timestamp Time
+
+	// actual http response body from apple
+	Body string
 }
 
 // Sent returns whether or not the notification was successfully sent.
