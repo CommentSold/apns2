@@ -10,11 +10,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net"
 	"net/http"
 	"time"
 
-	"github.com/sideshow/apns2/token"
+	"github.com/CommentSold/apns2/token"
 	"golang.org/x/net/http2"
 )
 
@@ -182,6 +183,13 @@ func (c *Client) PushWithContext(ctx Context, n *Notification) (*Response, error
 	response := &Response{}
 	response.StatusCode = httpRes.StatusCode
 	response.ApnsID = httpRes.Header.Get("apns-id")
+
+	body, err := ioutil.ReadAll(httpRes.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	response.Body = string(body)
 
 	decoder := json.NewDecoder(httpRes.Body)
 	if err := decoder.Decode(&response); err != nil && err != io.EOF {
